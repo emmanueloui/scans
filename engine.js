@@ -15,7 +15,7 @@ var output = require('./postprocess/output.js')
 
  * @param settings General purpose settings.
  */
-var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings) {
+var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, GoogleConfig, settings, resolve, reject) {
     // Determine if scan is a compliance scan
     var complianceArgs = process.argv
         .filter(function (arg) {
@@ -179,7 +179,10 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
                     setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
                 });
             }, function(err, results){
-                if (err) return console.log(err);
+                if (err) {
+                    reject('ko');
+                    return console.log(err);
+                }
                 var summaryStatus = Math.max(...Object.values(results))
                 serviceProviderDone(err, summaryStatus);
             });
@@ -191,6 +194,10 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
             process.exitCode = Math.max(results)
         }
         console.log('Done');
+        if (err) {
+            reject('ko');
+        }
+        resolve('ok');
     });
 };
 
