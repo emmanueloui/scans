@@ -97,7 +97,6 @@ var engine = function (AWSConfig, AzureConfig, GitHubConfig, OracleConfig, Googl
 
     for (p in plugins) {
         for (sp in serviceProviders) {
-            console.log(serviceProviders[sp].name);
             var serviceProviderPlugins = getMapValue(plugins, serviceProviders[sp].name);
             var serviceProviderAPICalls = serviceProviders[sp].apiCalls;
             var serviceProviderConfig = serviceProviders[sp].config;
